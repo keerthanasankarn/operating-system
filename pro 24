@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, head, i, total_seek_time = 0;
+    printf("Enter the number of disk requests: ");
+    scanf("%d", &n);
+
+    int requests[n];
+
+    printf("Enter the current position of the disk head: ");
+    scanf("%d", &head);
+
+    printf("Enter the requests (track numbers):\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &requests[i]);
+    }
+
+    int start = 0, end = n - 1;
+
+    // Sort the requests
+    for (i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Disk traversal path: ");
+    
+    // Move the head to the end of the disk
+    total_seek_time += abs(head - requests[end]);
+    printf("%d -> ", requests[end]);
+    head = requests[end];
+
+    // Move to track 0
+    total_seek_time += head;
+    printf("0 -> ");
+    head = 0;
+
+    // Traverse back from track 0 to the beginning
+    for (i = start; i <= end; i++) {
+        total_seek_time += abs(head - requests[i]);
+        printf("%d -> ", requests[i]);
+        head = requests[i];
+    }
+
+    printf("0\n");
+
+    printf("Total seek time: %d\n", total_seek_time);
+
+    return 0;
+}
